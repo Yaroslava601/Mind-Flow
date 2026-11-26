@@ -130,19 +130,21 @@ st.markdown(
 
 # ID участника
 if "participant_id" not in st.session_state:
-  st.session_state["participant_id"] = "участник_1"
+    st.session_state["participant_id"] = ""
 
 raw_pid = st.sidebar.text_input(
     "Ваш код / ID участника",
     value=st.session_state["participant_id"],
     max_chars=30,
+    placeholder="Например, уч_1",
     help=(
-        "Придумайте короткий код (например, уч_01). Не вводите ФИО, пароли и"
-        " личные контакты."
+        "Придумайте короткий код (например, уч_Я). Не вводите ФИО, пароли и "
+        "личные контакты."
     ),
 )
-participant_id = raw_pid.strip() or "участник_1"
+participant_id = raw_pid.strip()
 st.session_state["participant_id"] = participant_id
+
 st.sidebar.caption(
     "Не указывайте фамилии, пароли и личные данные — заметки могут"
     " анализироваться ИИ."
@@ -176,11 +178,10 @@ init_db()
 
 # 3. Шапка сайта
 st.title("🌸 MindFlow")
-st.markdown("### 👤 Привет, Ярослава")
-st.markdown("## Ноябрь")
-
-# Индикатор дня цикла
-st.info("📅 **ДЕНЬ ЦИКЛА: 15**")
+if participant_id:
+    st.markdown(f"### 👤 Привет, {participant_id}!")
+else:
+    st.info("Сначала введите свой ID участника в боковой панели слева.")
 
 # 4. Три крупные кнопки-вкладки
 tab_journal, tab_forecast, tab_charts = st.tabs(
@@ -361,7 +362,9 @@ with tab_journal:
     # 4) Большая розовая кнопка «ОТМЕТИТЬ ДЕНЬ»
     st.markdown('<div class="main-submit">', unsafe_allow_html=True)
     if st.button("ОТМЕТИТЬ ДЕНЬ", type="primary", key="submit_day"):
+        
         pid = st.session_state["participant_id"]
+
         
         conn = sqlite3.connect('mindflow_test.db')
         cur = conn.cursor()
