@@ -1,0 +1,33 @@
+# import re
+
+unsafe_text = int(input('Please, write your text'))
+data = {
+    
+}
+
+triggers_FN = [
+    'FN', 'Fn', 'fn', 'fN', 'First Name', 'First name', 'first name', 'first Name', 'FirstName', 'firstname'
+]
+
+triggers_LN = [
+    'LN', 'Ln', 'ln', 'lN', 'Last Name', 'Last name', 'last name', 'last Name', 'LastName', 'lastname'
+]
+
+triggers_DOB = [
+    'DOB', 'Dob', 'dOb', 'doB', 'DoB', 'DOb', 'dOB', 'Date of birth', 'Date Of Birth', 'date of birth', 
+    'Date of Birth', 'Dateofbirth', 'DateOfBirth', 'dateofbirth', 'birthday', 'Birthday', 'BIRTHDAY', 'birth', 'Birth', 'BD'
+]
+
+data = dict.fromkeys(triggers_FN, 'Name')
+data = dict.fromkeys(triggers_LN, 'Last Name')
+data = dict.fromkeys(triggers_DOB, 'Date of Birth')
+
+def make_safe (unsafe_text, data):
+    if data[triggers_FN] in unsafe_text in unsafe_text:
+        safe_text = unsafe_text.replace(triggers_FN, dict.get(triggers_FN))
+        return safe_text
+    else:
+        safe_text = unsafe_text
+        return safe_text
+
+print(make_safe (unsafe_text, data))
