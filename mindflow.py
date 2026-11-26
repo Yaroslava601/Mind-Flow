@@ -362,9 +362,24 @@ with tab_journal:
     # 4) Большая розовая кнопка «ОТМЕТИТЬ ДЕНЬ»
     st.markdown('<div class="main-submit">', unsafe_allow_html=True)
     if st.button("ОТМЕТИТЬ ДЕНЬ", type="primary", key="submit_day"):
-        
         pid = st.session_state["participant_id"]
 
+        if st.button("ОТМЕТИТЬ ДЕНЬ", type="primary", key="submit_day"):
+            pid = st.session_state.get("participant_id", "").strip()
+            if not pid:
+                st.warning("Сначала введите свой ID участника в боковой панели слева, чтобы сохранить запись.")
+                st.stop()
+
+            conn = sqlite3.connect('mindflow_test.db')
+            cur = conn.cursor()
+            today_str = datetime.date.today().isoformat()
+            cur.execute(
+                "INSERT INTO checkins (participant_id, date, sleep, mood, energy, note) VALUES (?, ?, ?, ?, ?, ?)",
+                (pid, today_str, sleep_hours, mood, st.session_state.energy, note),
+            )
+            conn.commit()
+            conn.close()
+            st.success("День отмечен!")
         
         conn = sqlite3.connect('mindflow_test.db')
         cur = conn.cursor()
